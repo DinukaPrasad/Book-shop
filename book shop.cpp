@@ -24,10 +24,11 @@ bool login();
 void forgotpass();
 bool search(string bn);
 float add(string bn,string cn);
-void dataupdate();
+void data();
 void quotation(string cn);
 void discount(string cn,float total);
 void bills (string billid);
+void SCD();
 
 int main()
 {
@@ -38,13 +39,13 @@ int main()
     bool l1,status,cshilo2;
     int billid = 20001;
 
-    cout<<"\n\t\t.-' **** Nethra Book Shop **** '-.\t\t\n\n";
-    cout<<"> Choose your roll_ \n\n1. customer\n2. cashier\n3. admin\n";
+    cout<<"\n\t\t.-' **** Genius Book Shop **** '-.\t\t\n\n";
+    cout<<"> Choose your roll_ \n\n1. Guest \n2. cashier\n3. admin\n";
     cin>>rollcon;
     
     switch (rollcon)
     {
-    //customer
+    //guest
     case '1':
     {
         //incorrect command loop
@@ -57,67 +58,33 @@ int main()
 
             do
             {
-             cout<<"1. cart\n2. book list\n";
+             cout<<"1. Company Details\n2. Book Details\n3. Exit";
              cin>>cuscon;
 
                 if (cuscon=='1')
                 {
-                    bool loop2,catsearch;
-                    char billcon;
-
-                    do
-                    {
-                        cout<<"# Book name: "; 
-                        cin>>sbname;
-
-                        catsearch = search(sbname);
-
-                        if(!catsearch)
-                        {
-                            loop2 = true;
-                        }
-                        else
-                        {
-                            cout<<"\n1. Add to cart\n2. Research\n"; 
-                            cin>>srccon;
-
-                            if(srccon=='1')
-                            {
-                                tot += add (sbname,cname);
-                                cout<<"\n> Print bill\n   yes(y)    no(n)\n";
-                                cin>>billcon;
-
-                                if(billcon=='y'||billcon=='Y')
-                                {
-                                    cout<<"\n**********************************************************************\n";
-                                    discount(cname,tot);
-                                    quotation(cname);
-                                    bills(cname);
-                                    loop2=false;
-                                }
-                                else
-                                {
-                                    loop2=true;
-                                }
-                            }
-                            else if(srccon=='2')
-                            {
-                                loop2=true;
-                            }
-                            else
-                            {
-                                cout<<"incorrect command";
-                                loop2=true;
-                            }
-                        }
-
-                    }while(loop2==true);
-
-                    cusloop1 = false;
+                    SCD();
+                    cusloop1 = true;
                 }
                 else if (cuscon=='2')
                 {
-                    //book list
+                    string line;
+
+                    ifstream f("bookdata.txt");
+                    cout<<"***********************************************\n\n";
+                    while(getline(f,line))
+                    {
+                        cout<<line<<endl;
+                    }
+                    cout<<"***********************************************\n\n";
+
+                    f.close();
+
+                    cusloop1 = true;
+                }
+                else if(cuscon=='3')
+                {
+                    main();
                     cusloop1 = false;
                 }
                 else
@@ -126,8 +93,6 @@ int main()
                     cusloop1=true;
                 }
             }while (cusloop1==true);
-
-            main();
 
     break;
     }
@@ -144,6 +109,8 @@ int main()
             {
                 do
                 {
+                    
+
                     status = login();
 
                     if(!status)
@@ -228,6 +195,7 @@ int main()
                             }
                             else
                             {
+                                cout<<"Successfully Logout"<<endl;
                                 cshirlo3 = true;
                                 cshirlo4 = false;
                                 l1 = false;
@@ -258,7 +226,7 @@ int main()
             if (adcon1 == '1')
             {
                 do
-                {
+                {                  
                     adbool1 = login();
 
                     if (!adbool1)
@@ -286,7 +254,7 @@ int main()
                             {
                             case '1':
                             
-                                dataupdate();
+                                data();
                                 adlop3 = true;
 
                                 break;
@@ -302,19 +270,27 @@ int main()
                                 }
                                 ord.close();
 
-                                break;
-                                }
-                            case '3':
-                                adlop3 = false;
-                                adlop2 = false;
-                                adlop1 = true;
-                        
-                            default:
-
-                                cout<<"\nIncorrect command !!\n\n";
                                 adlop3 = true;
 
                                 break;
+                                }
+                            case '3':
+                                {
+                                    cout<<"Successfully Logout"<<endl;
+                                adlop3 = false;
+                                adlop2 = false;
+                                adlop1 = true;
+                                break;
+                                }
+                                
+                            default:
+                                {
+                                    cout<<"\nIncorrect command !!\n\n";
+                                    adlop3 = true;
+
+                                    break;
+                                }
+                               
                             }
                         } while (adlop3 == true);
                         
@@ -441,44 +417,111 @@ float add(string bn,string cn)
     return fprice*qnty;
 }
 
-void dataupdate()
+void data()
 {
     // structures
-    book b;
+    book addb;
     cashier c;
     char con1;
-
-    cout<<"\n1. add book to database\n2. create cashier ID ";
+    cout<<"**********************************************************************"<<endl<<"\t\t\tDatabase\n";
+    cout<<"\n1. add book\n2. update book\n3. delete book\n4. create cashier ID";
     cin>>con1;
     switch (con1)
     {
     case '1':
         {
+            cout<<"**********************************************************************"<<endl<<"\t\t\tADD BOOK DETAILS\n";
             cout<<"\t# Book name : "; 
             cin.ignore();
-            getline(cin,b.name);
+            getline(cin,addb.name);
             cout<<"\t# Written year : "; 
-            cin>>b.year;
+            cin>>addb.year;
             cout<<"\t# Author : ";
             cin.ignore(); 
-            getline(cin,b.author);
+            getline(cin,addb.author);
             cout<<"\t# Book ID : "; 
-            cin>>b.id;
+            cin>>addb.id;
             cout<<"\t# Price : "; 
-            cin>>b.price;
+            cin>>addb.price;
 
             //creat data profile
-            ofstream details(b.name+"details.txt",ios::app);
+            ofstream details(addb.name+"details.txt",ios::app);
+            ofstream bdata("bookdata.txt",ios::app);
 
-            details<<b.name<<endl<<b.year<<endl<<b.author<<endl<<b.id<<endl<<b.price;
+            details<<addb.name<<endl<<addb.year<<endl<<addb.author<<endl<<addb.id<<endl<<addb.price;
+            bdata<<addb.name<<" "<<addb.year<<" "<<addb.author<<" "<<addb.id<<" "<<addb.price;
 
             cout<<" * Successfully added *\n\n";
+
+            details.close();
 
         break;
 
         }
-        
+    
      case '2':
+        {
+            cout<<"**********************************************************************"<<endl<<"\t\t\t UPDATE BOOK DETAILS\n";
+            cout<<"\t# Book name : "; 
+            cin.ignore();
+            getline(cin,addb.name);
+
+            cout<<"\n\t# New Written year : "; 
+            cin>>addb.year;
+            cout<<"\t# New Author : ";
+            cin.ignore(); 
+            getline(cin,addb.author);
+            cout<<"\t# New Book ID : "; 
+            cin>>addb.id;
+            cout<<"\t# New Price : "; 
+            cin>>addb.price;
+
+            ofstream details(addb.name+"details.txt",ios::out);
+            
+
+            details<<addb.name<<endl<<addb.year<<endl<<addb.author<<endl<<addb.id<<endl<<addb.price;
+
+            cout<<" * Successfully updated *\n\n";
+
+            details.close();
+
+            break;
+        }
+        
+        case '3':
+        {
+            string bname,year,author,bid,bprice;
+
+            cout<<"**********************************************************************"<<endl<<"\t\t\tDELETE BOOK DETAILS\n";
+
+            cout<<"\t# Book name : "; 
+            cin.ignore();
+            getline(cin,addb.name);
+
+            ofstream delfile;
+            delfile.open(addb.name + "details.txt",ios::out);
+
+            if(delfile.is_open())
+            {   
+                delfile<<"Data was deleted"<<endl; 
+                delfile<<"Data was deleted"<<endl; 
+                delfile<<"Data was deleted"<<endl; 
+                delfile<<"Data was deleted"<<endl;
+                delfile<<"Data was deleted"<<endl;
+
+                cout<<"Successfully Deleted"<<endl;  
+                
+            }
+            else{
+                cout<<"Incorrect book name!!";
+            }
+
+            delfile.close();
+
+            break;
+        }
+
+     case '4':
         {
             cout<<"\n# Cashier name: "; cin>>c.name;
             cout<<"\n# Password: "; cin>>c.pass;
@@ -552,4 +595,19 @@ void bills (string billid)
 
     datafile.close();
     cfile.close();
+}
+
+void SCD()
+{
+    string line;
+
+    ifstream f("comdel.txt");
+    cout<<"***********************************************\n\n";
+    while(getline(f,line))
+    {
+        cout<<line<<endl;
+    }
+    cout<<"***********************************************\n\n";
+
+    f.close();
 }

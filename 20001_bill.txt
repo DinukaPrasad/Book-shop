@@ -1,0 +1,8 @@
+book1  200.5 * 2  = Rs. 401
+
+
+# Total : Rs.401
+# Discount : 0%
+# Total amount : Rs.401
+
+Come Again !!
