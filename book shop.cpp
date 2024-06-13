@@ -54,7 +54,7 @@ int main()
         cout<<"\nEnter your name: "; 
         cin>>cname;
         cout<<"\n**********************************************************************\n\n";
-        cout<<" Welcome, "<<cname<<"!\n\n";
+        cout<<" # Welcome, "<<cname<<"!\n\n";
 
             do
             {
